@@ -12,7 +12,7 @@ import Animated, {
 export default function ReanimatedPlayground() {
   return (
     <Container>
-      <SplitMovingText text="Everybody can cook" />
+      <SplitMovingText text="Everybody can cook." />
     </Container>
   );
 }
@@ -42,18 +42,18 @@ const AnimatedLetter = ({ text, index }: { text: string; index: number }) => {
   }));
 
   useEffect(() => {
-    const delay = index * delayMultiplier;
+    const delay = (index + 8) * delayMultiplier;
 
-    y.value = withDelay(delay, withRepeat(withSpring(0, { duration }), -1));
+    y.value = withDelay(delay, withRepeat(withSpring(0, { duration }), 1));
 
     opacity.value = withDelay(
       delay,
-      withRepeat(withSpring(0, { duration }), -1)
+      withRepeat(withSpring(0, { duration }), 1)
     );
 
     bottomScale.value = withDelay(
       delay,
-      withRepeat(withSpring(1, { duration, overshootClamping: true }), -1)
+      withRepeat(withSpring(1, { duration, overshootClamping: true }), 1)
     );
   }, [index]);
 
