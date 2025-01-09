@@ -1,6 +1,5 @@
-// @refresh reset
 import { useEffect } from "react";
-import { ScrollView } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -19,13 +18,17 @@ export default function ReanimatedPlayground() {
 
 function Container({ children }: { children: React.ReactNode }) {
   return (
-    <ScrollView contentContainerStyle={styles.container}>{children}</ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        {children}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const AnimatedLetter = ({ text, index }: { text: string; index: number }) => {
-  const duration = 1100;
-  const delayMultiplier = 75;
+  const duration = 700;
+  const delayMultiplier = 40;
 
   const y = useSharedValue(1);
   const opacity = useSharedValue(1);
@@ -43,17 +46,21 @@ const AnimatedLetter = ({ text, index }: { text: string; index: number }) => {
 
   useEffect(() => {
     const delay = (index + 8) * delayMultiplier;
+    const repeats = 1;
 
-    y.value = withDelay(delay, withRepeat(withSpring(0, { duration }), 1));
+    y.value = withDelay(
+      delay,
+      withRepeat(withSpring(0, { duration }), repeats)
+    );
 
     opacity.value = withDelay(
       delay,
-      withRepeat(withSpring(0, { duration }), 1)
+      withRepeat(withSpring(0, { duration }), repeats)
     );
 
     bottomScale.value = withDelay(
       delay,
-      withRepeat(withSpring(1, { duration, overshootClamping: true }), 1)
+      withRepeat(withSpring(1, { duration, overshootClamping: true }), repeats)
     );
   }, [index]);
 
@@ -74,18 +81,21 @@ const AnimatedLetter = ({ text, index }: { text: string; index: number }) => {
 };
 
 const SplitMovingText = ({ text }: { text: string }) => (
-  <Animated.View style={{ flexDirection: "row" }}>
+  <Animated.View
+    style={{ flexDirection: "row", width: "80%", flexWrap: "wrap" }}
+  >
     {text.split("").map((char, i) => (
       <AnimatedLetter key={i} text={char} index={i} />
     ))}
   </Animated.View>
 );
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "black",
   },
   topStyle: {
     transformOrigin: "top",
@@ -94,6 +104,8 @@ const styles = {
     transformOrigin: "bottom",
   },
   sharedStyle: {
-    fontSize: 40,
+    fontSize: 48,
+    color: "white",
+    fontStyle: "italic",
   },
-} as const;
+});
